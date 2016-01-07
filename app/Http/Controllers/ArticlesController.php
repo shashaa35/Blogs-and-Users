@@ -12,7 +12,7 @@ class ArticlesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth',['only'=>'create']);
+        $this->middleware('auth',['except'=>['index','show']]);
     }
 
     //show all articles
@@ -47,12 +47,12 @@ class ArticlesController extends Controller
     */
     public function store(ArticleRequest $request)
     {
-        $article = new Article($request->all());//$article don't have user id at this point
+      //  $article = new Article($request->all());//$article don't have user id at this point
         
-        \Auth::user()->articles()->save($article);//this command saves a new article through users table
+        //    \Auth::user()->articles()->save($article);//this command saves a new article through users table
         //shashank you need to work on relationships(eloquent);
 
-
+        \Auth::user()->articles()->create($request->all());
         //after validation not using facade and before eloquent relationships
             //Article::create($request->all());        
         // before validation i.e. CreateArticleRequest 
@@ -62,27 +62,32 @@ class ArticlesController extends Controller
         $articles=Article::latest('published_at')->published()->get();
         return view('articles.index',compact('articles'));
         */
-        return redirect('articles');
+//        session()->flash('flash_message','Your article has been created');
+        return redirect('articles')->with([
+            'flash_message'=>'Your article has been created',
+            'flash_message_important'=>true
+        ]);
     }
 
     //to edit the article
-    public function edit($id)
+    public function edit(Article $article)
     {
-        $article=Article::findOrFail($id);
+        // $article=Article::findOrFail($id);
         return view('articles.edit',compact('article'));
     }
-    public function update($id,ArticleRequest $request)
+    public function update(Article $article,ArticleRequest $request)
     {
-        $article=Article::findOrFail($id);
+        // $article=Article::findOrFail($id);
         $article->update($request->all());
         return redirect('articles');
     }
     
     //to show a single article of particular id
-    public function show($id){        
-        $articles=Article::findOrFail($id);
+    public function show(Article $article){ 
+
+        // $article=Article::findOrFail($id);
         // dd($articles->published_at->diffForHumans());
-        return view('articles.show',compact('articles'));
+        return view('articles.show',compact('article'));
     }
 }
 ?>
