@@ -23,7 +23,7 @@ class RouteServiceProvider extends ServiceProvider {
 	public function boot(Router $router)
 	{
 		parent::boot($router);
-		$router->model('articles','App\Article');
+		$router->model('articles','App\article');
 
 		
 	}
@@ -40,6 +40,5 @@ class RouteServiceProvider extends ServiceProvider {
 		{
 			require app_path('Http/routes.php');
 		});
-	}
+	}}
 
-}

@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Article;
+use App\Tag;
 use App\Http\Requests;
 use App\Http\Requests\ArticleRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Controller\Auth;
-use App\Http\Controller\Auth\AuthController;
+use App\Http\Controllers\Auth;
+use App\Http\Controllers\Auth\AuthController;
 class ArticlesController extends Controller
 {
     public function __construct()
@@ -26,7 +27,8 @@ class ArticlesController extends Controller
 
     //view of create article page
     public function create(){
-    	return view('articles.create');
+        $tags=Tag::lists('name','id');
+    	return view('articles.create',compact('tags'));
     }
 
     /*
@@ -40,29 +42,32 @@ class ArticlesController extends Controller
     }
     */
 
-
     /*
     Post function of create article view to store new article
     ArticleRequest is used for validating the request through rules defind in that file
     */
     public function store(ArticleRequest $request)
     {
+      //  dd($request->input('tags'));
       //  $article = new Article($request->all());//$article don't have user id at this point
         
         //    \Auth::user()->articles()->save($article);//this command saves a new article through users table
         //shashank you need to work on relationships(eloquent);
 
-        \Auth::user()->articles()->create($request->all());
+        $article= \Auth::user()->articles()->create($request->all());
         //after validation not using facade and before eloquent relationships
             //Article::create($request->all());        
         // before validation i.e. CreateArticleRequest 
             //Article::create(Request::all());
+        $tagIds=$request->input('tag_list');
+        $article->tags()->attach($tagIds);
+
         /*
         if we dont want to use redirect
         $articles=Article::latest('published_at')->published()->get();
         return view('articles.index',compact('articles'));
         */
-//        session()->flash('flash_message','Your article has been created');
+        //session()->flash('flash_message','Your article has been created');
         return redirect('articles')->with([
             'flash_message'=>'Your article has been created',
             'flash_message_important'=>true
@@ -70,22 +75,29 @@ class ArticlesController extends Controller
     }
 
     //to edit the article
-    public function edit(Article $article)
+    public function edit($id)
     {
-        // $article=Article::findOrFail($id);
-        return view('articles.edit',compact('article'));
+         $article=Article::findOrFail($id);
+        $tags=Tag::lists('name','id');
+        return view('articles.edit',compact('article','tags'));
     }
-    public function update(Article $article,ArticleRequest $request)
+
+    public function update($id,ArticleRequest $request)
     {
-        // $article=Article::findOrFail($id);
+         $article=Article::findOrFail($id);
         $article->update($request->all());
+        $tagIds=$request->input('tag_list');
+        $article->tags()->sync($tagIds);
+
         return redirect('articles');
     }
     
     //to show a single article of particular id
-    public function show(Article $article){ 
+    public function show($id){
+//        dd($id);
+         $article=Article::findOrFail($id);
 
-        // $article=Article::findOrFail($id);
+//        dd($article);
         // dd($articles->published_at->diffForHumans());
         return view('articles.show',compact('article'));
     }
