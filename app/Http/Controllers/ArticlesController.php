@@ -93,9 +93,9 @@ class ArticlesController extends Controller
     }
     
     //to show a single article of particular id
-    public function show($id){
-//        dd($id);
-         $article=Article::findOrFail($id);
+    public function show( $id){
+      //  dd($id);
+         $article=Article::published()->findOrFail($id);
 
 //        dd($article);
         // dd($articles->published_at->diffForHumans());
