@@ -38,6 +38,10 @@ class article extends Model
     	$this->attributes['published_at']=Carbon::parse($date);
     	//if we want to publish article in future then it shows time 0:00 i.e. a type of check
     }
+    public function getPublishedAtAttribute($date)
+    {
+        return new Carbon($date);
+    }
 
     /*
     An article is owned by a user

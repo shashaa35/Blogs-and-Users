@@ -88,7 +88,7 @@ class ArticlesController extends Controller
         $article->update($request->all());
         $tagIds=$request->input('tag_list');
         $article->tags()->sync($tagIds);
-
+   // dd($article);
         return redirect('articles');
     }
     

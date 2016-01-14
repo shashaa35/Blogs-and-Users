@@ -10,8 +10,8 @@
 
     <div class="form-group">
       {!!Form::label('published_at','Published At:')!!}
-      {!!Form::input('date','published_at',date('Y-m-d'),['class'=>'form-control'])!!}
-      <!-- {!!Form::input('date','published_at',Carbon\Carbon::now()->format('Y-m-d'),['class'=>'form-control'])!!} -->
+      {{--{!!Form::input('date','published_at',date('Y-m-d'),['class'=>'form-control'])!!}--}}
+       {!!Form::input('date','published_at',$article->published_at->format('Y-m-d'),['class'=>'form-control'])!!}
     </div>
  <div class="form-group">
      {!! Form::label('tag_list','Tags:') !!}
@@ -26,6 +26,8 @@
 
  @section('footer')
     <script type="text/javascript">
-        $('#tag_list').select2();
+        $('#tag_list').select2({
+            placeholder:"select a tag"
+        });
     </script>
  @endsection
