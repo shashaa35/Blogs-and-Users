@@ -5,7 +5,8 @@
     @foreach($articles as $article)
     <article>
         <h2>
-            <a href="articles/{{$article->id}}">{{$article->title}}</a>
+{{--            {{link_to("/articles/{$article->id}",$article->title)}}--}}
+            <a href="/{{$article->id}}">{{$article->title}}</a>
         </h2>
         <div class="body">{{$article->body}}</div>
 

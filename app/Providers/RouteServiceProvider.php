@@ -28,6 +28,9 @@ class RouteServiceProvider extends ServiceProvider {
 		{
 			return \App\Article::published()->findOrFail($id);
 		});
+		$router->bind('tags',function($name){
+			return \App\Tag::where('name',$name)->firstOrFail();
+		});
 
 		
 	}

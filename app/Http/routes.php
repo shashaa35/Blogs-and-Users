@@ -10,7 +10,11 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+//Route::bind('tag',function($tag){
+//	return App\Tag::where('name',$tag)->first();
+//});
 Route::get('foo','FooController@foo');
+Route::get('tags/{tags}','TagsController@show');
 
 Route::get('/', 'WelcomeController@index');
 
